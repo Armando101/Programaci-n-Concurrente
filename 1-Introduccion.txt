@@ -1,0 +1,186 @@
+¿Qué es la programación concurrente?
+
+	Responder a la pregunta ¿Qué es la programación concurrente? puede llegar hacer algo complejo, principalmente por que hay que tener muy en claro un par de conceptos. 
+
+	Me refieron a: concurrencia, paralelismos y programación estructurada, puntualmente estructura secuencial.
+
+	Si nunca has escuchado sobre ellos, o, aún te quedan ciertas dudas, no te preocupes, en esta ocasión me gustaría que explicaremos en detalle, y con ejemplos, en qué consiste cada uno de estos conceptos, y de esta forma comprender al cien por ciento que es la programación concurrente, sus ventajas y por su puesto sus desventajas.
+
+Programación estructurada
+
+	Comencemos con lo sencillo, expliquemos que es la programación estructurada (Un pequeño repaso)
+
+	Verás, la programación estructurada no es más que un paradigma de programación. Estoy prácticamente seguro que la gran mayoría de nosotros comenzamos a programar bajo este paradigma, pero ¿De qué se trata? En términos simples la programación estructurada tiene como objetivo mejorar el desarrollo de software recurriendo a únicamente subrutinas y tres estructuras básicas: Secuencial, Selectiva e Iterativa.
+
+	En terminos de programación una estructura selectiva hace referencia a condicionales, por ejemplo, un if, else, else if o swith. Para una estructura iterativa estaremos hablando de ciclos, por ejemplo for, foreach, while o do while.
+
+	Lo que nos interesa para este post es la estructura secuencial. En programación, una estructura secuencial no es más que la ejecución, en secuencia, de múltiples tareas. Estas tareas serán ejecutadas una tras otra, todas en un orden previamente definido. Una tarea no podrá ejecutarse antes de otra si en el programa no fue indicado de esa manera.
+
+	Veamos un ejemplo.
+
+*********************************************************
+
+		print('Hola, soy un programa muy simple')
+		nombre = input('¿Cual es tu nombre? ')
+		print('Mucho gusto ' + nombre)
+		print('Adios, fin del programa')
+
+*********************************************************
+	En este ejemplo podemos decir que tenemos cuatro tareas, una por cada línea de código. El orden de ejecución es descendente. El programa no puede imprimir en consola el nombre del usuario sin antes haberlo pedido. De igual forma, el programa no puede despedirse sin antes haber dado la bienvenida. Podemos concluir que este programa es secuencial, ya que cada tarea se ejecuta una tras otra, en un orden.
+
+Concurrencia y Paralelismo
+
+	Ahora hablemos de la concurrencia y el paralelismo, conceptos que en muchas ocasiones se confunden y se puede llegar a pensar que se tratan de lo mismo, cuando en realidad no es así, veamos.
+
+	La concurrencia es, en esencia, el poder realizar múltiples cosas en el mismo tiempo, pero, no específicamente en paralelo, ¿Qué?
+
+	Una de las formas más sencillas de comprender la concurrencia es imaginar a una persona la cual trabaja en múltiples tareas al mismo tiempo, y que rápidamente cambia de una tarea a otra. Por ejemplo, imaginemos a una persona la cual se encuentra programando, realizando cálculos en excel y contestando correos electrónicos, todo esto al mismo tiempo. Dedica un par de segundos a cada tarea, y rápidamente, con un ágil cmd + shift cambia de tarea.
+
+	Concluimos que la persona trabaja de forma concurrente. Las tareas que realiza no necesariamente deben seguir un orden, quizás, después de contestar un correo regresa con los cálculos en excel, le dedica un par de segundo, regresa a responder otro correo y finaliza con la codificación del programa, u, otro escenario pudiera ser que después finalizar ciertos cálculos, la persona continua codeando un par de segundos para después responder un par de correos y regresar con los cálculos.
+
+	    Al contrario que una estructura secuencial, con la concurrencia el orden en que se ejeuctan las tareas importa muy poco.
+
+	Bien, veamos un ejemplo en código de concurrencia.
+
+*********************************************************
+		import time
+		import threading
+
+		def codificar():
+		    time.sleep(2)
+
+		    print(f'Codificando')
+
+		def responder_correos():
+		    time.sleep(2)
+
+		    print(f'Respondiendo correos')
+
+		def realizar_calculos():
+		    time.sleep(2)
+
+		    print(f'Realizar los calculos')
+
+
+		threading.Thread(target=codificar).start()
+		threading.Thread(target=responder_correos).start()
+		threading.Thread(target=realizar_calculos).start()
+	
+*********************************************************
+	En este caso nuestro programa realiza tres tareas al mismo tiempo. A cada tarea le tomó un máximo de dos segundos ser completada, como se ejecutan de forma concurrente (al mismo tiempo) al programa le toma dos segundo finalizar su ejecución. Por otro lado, si ejecutamos el mismo código, pero ahora de forma secuencial, al programa le tomaría seis segundos finalizar. El tiempo es sin duda considerable.
+
+*********************************************************
+
+		#secuencial
+
+		codificar()
+		responder_correos()
+		realizar_calculos()
+
+*********************************************************
+
+	Bien, ya tenemos claro que es la estructura secuencial y que es la concurrencia, ahora,
+
+
+¿De qué va el paralelismo?
+
+	El paralelismo es el poder de ejecutar dos o más acciones de forma simultánea, en lugar de concurrentemente. Si recordamos, en nuestro ejemplo anterior, el desarrollador realiza tres tareas al mismo tiempo, realizaba calculos programaba y contestaba correos, sin embargo, ninguna de estas tareas se realizaba de forma simultánea.
+
+	En nuestro ejemplo, si queremos que las tareas se realicen de forma paralela tendríamos que tener a tres personas trabajando, vaya, una persona por cada tarea, una persona encargada de los cálculos, otra de la codificación y otra respondiendo correos, tres personas trabajando simultáneamente.
+
+	Técnicamente hablando, para llevar a cabo un verdadero paralelismo es necesario que nuestra computadora posea múltiples procesadores, con esto, cada tarea será ejecutada en un procesador diferente, de forma simultánea, de forma paralela.
+	
+	Para crear paralelismo con Python será necesario utilizar el modulo processing.
+
+*********************************************************
+
+		import os
+		import time
+		import logging
+		import multiprocessing
+
+		logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+
+		def new_process(time_to_sleep=0):
+		    logging.info('Comenzamos el proceso hijo!')
+
+		    time.sleep(time_to_sleep)
+
+		    logging.info('Terminamos el procesos hijo!')
+
+		def main():
+		    process = multiprocessing.Process(target=new_process,
+		                                        name='proceso-hijo',
+		                                        args=(1,),
+		                                        daemon=False)
+		    process.start()
+		    process.join()
+
+		    logging.info(f'Finalizamos el proceso principal')
+
+		if __name__ == '__main__':
+		    main()
+
+*********************************************************
+
+La principal diferencia entre concurrencia y paralelismo recae en la forma en que se realizan las tareas. Cuando se ejecutan tareas de forma concurrente a estas se les asigna un x periodo de tiempo antes de cambiar de tarea, será en ese periodo en el cual se inicie, continúe, o se complete la tarea, por otro lado, si ejecutamos tareas en paralelo, las tareas se realizarán de forma simultánea, comenzarán y finalizarán sin interrupciones.
+
+Si deseamos implementar concurrencia en nuestros programas una muy buena idea será utilzar Threads, por otro lado, si deseamos implementar paralelismos optaremos por procesos.
+
+
+Conclusión
+
+	En conclusión y en términos simples, la programación concurrente no es más que la forma en la cual podemos resolver ciertas problemáticas de forma concurrente, es decir, ejecutando múltiples tareas a la misma vez y no de forma secuencial.
+
+	En un programa concurrente las tareas puede continuar sin la necesidad que otras comiencen o finalicen.
+
+	Si bien es cierto que la programación concurrente acarrea ciertos problemas, principalmente al momento de compartir información entre tareas, también es cierto que si se implementa de forma correcta, podremos, en casos puntuales, mejorar significativamente el performance de nuestras aplicaciones.
+
+*******************************************************************************
+Threads y Procesos
+
+	Para comprender mejor el tema de programación concurrente es necesario conocer y dominar dos conceptos claves, me refiero a threads y procesos, conceptos que en primera instancias puede ser algo complejos de comprender y que sin duda, a más de uno le han causado dolores de cabeza. Es por ello que en esta ocasión me gustaría que habláramos sobre ellos, explicando qué son, en que son similares y por supuesto, en que son diferentes.
+
+Procesos
+	En términos simples un proceso no es más que la instancia de un programa. Verás, cuando tú abres cualquier programa en tu dispositivo, por ejemplo, tu navegador web, quizás google chrome, internamente estás creando un nuevo proceso.
+
+	Un proceso no será más que la ejecución del programa mismo. Y ojo, no hay que confundir un proceso con un programa ya que son entidades completamente diferentes. Podemos ver a un programa como un conjunto de instrucciones y de datos, por otro lado, podemos ver a un proceso como la ejecución de esas instrucciones junto con esos datos. Una muy buena analogía es ver a un programa como la receta para preparar un platillo, ya que en una receta se establecen todos los ingredientes a utilizar junto con los pasos a seguir; en cambio, un proceso podemos verlo como la ejecución de esa receta, algo que se está realizando.
+
+	Puede quedarnos más en claro si consideramos que un mismo programa puede ser ejecutado múltiples veces por nuestro sistema operativo. Siguiendo con la analogía, una misma receta puede ser implementada por n chefs.
+
+	Dentro de un proceso encontraremos todo lo necesario para que el programa se ejecute de forma correcta, me refiero a código fuente, ficheros, variables, tareas, sub-procesos etc...
+
+	Otra entidad importante para comprender mejor el tema de procesos es sin duda el sistema operativo. El sistema operativo será quien cree, ejecute y controle todos los procesos.
+
+	Una de las tareas del sistema operativo es aislar a cada uno de los procesos entre sí, de tal forma que los procesos sean completamente independientes unos de otros; esto con la finalidad prevenir que compartan información entre ellos, lo cual pueda dar pie a errores. Es por ello que en esencia, los programas no pueden acceder a la información y datos de otros programa en ejecución.
+
+	Cuando un proceso finaliza, ya sea de forma natural o no, quizás por algún error, será el sistema operativo el encargado de liberar el espacio en memoria.
+
+	Podemos ver al sistema operativo como un maestro de ceremonias, quien está al pendiente de todos los procesos, desde su creación, ejecución y finalización.
+
+	Si utilizas un sistema operativo basado en unix, por ejemplo, fedora, puedes ejecutar en tu terminal el comando top, el cual listará todos los procesos en ejecución de tu sistema, de esta forma podrás obtener información de ellos.
+
+	Con los procesos es posible implementar el paralelismo, ejecutando diferentes procesos en diferentes procesadores, claro, tambíen depende de cuantos procesadores posea el equipo de computo.
+
+	Para que un proceso pueda ser ejecutado este necesita poseer por lo menos un thread, a este thread lo vamos a conocer como el thread principal, o, el main thread.
+
+
+Threads
+
+	Bien, ya sabemos que es un proceso, ahora hablemos de los Threads, un concepto un poco más sencillo de comprender.
+
+	Varás, los Threads, también conocidos como sub-procesos o hilos, podemos definirlos como una secuencia de instrucciones las cuales el sistema operativo puede programar para su ejecucción. A diferencia de un proceso, los threads son entidades mucho más pequeñas, lo cual los hace fácilles de gestionar, tanto es así que un thread es la unidad más pequeña a la cual un procesador puede asignar tiempo.
+
+	A diferencias de los procesos, los cuales viven dentro del sistema operativo, los threads viven dentro de los procesos. Un thread se crean, ejecutan y finalizan dentro de un proceso, dicho en otras palabras: Un thread le pertenece a un proceso, y, a su vez, un proceso puede poseer múltiples threads. Si lo vemos en términos de base de datos pudiésemos decir que esta es una relación uno a muchos.
+
+	Algo interesante a mencionar es que debido a que los Thread existen dentro de los procesos, estos pueden compartir información entre ellos; Algo a lo cual sin duda le podemos sacar mucho provecho, pero, que también puede llegar hacer complicado de manejar.  Uno de los problemas más comunes al momento de trabajar con Threads tiene por nombre Race condition, y es, en esencia, un problema que surge cuando más de un thread intenta acceder y modificar un espacio en memoria compartido, ocasionando que el programa se comporte de forma inadecuada.
+
+	Visto de otra forma, un thread no es más que un proceso, pero en pequeño, al igual de un proceso un thread se ejecuta dentro de un contexto y posee instrucciónes a realizar.
+
+Conclusión
+
+	En conclusión, un proceso no es más que la instancia de un programa, el cual es creado y controlado por el sistema operativo. Los procesos son entidades independientes y no pueden compartir información entre ellos. Para que un proceso pueda ser ejecutado es necesario que este posea por lo menos un thread.
+
+	Por otro lado, un thread es la unidad más pequeña a la cual un procesador puede asignar tiempo. Los threads poseerán la secuencia más pequeña de instrucciones a ejecutar. Los threads se crean, ejecutan y mueren dentro de los procesos, siendo capaces de compartir información entre ellos.
+
+	Con los threads y los procesos seremos capaces de implementar la programación concurrente, y, dependiendo de la cantidad de procesadores la programación en paralelo.
