@@ -41,11 +41,13 @@ def retiros():
 		with lock:
 			BALANCE -=1 # Sección crítica
 
+# Otra forma de utilizar los lock es con try catch finally
 def depositos_2():
 	global BALANCE
 	for _ in range(0,10000):
 		try:
 			lock.acquire()
+			BALANCE += 1
 		finally:
 			lock.release()
 
