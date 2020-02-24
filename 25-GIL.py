@@ -87,6 +87,8 @@ En palabras de Larry Hastings: la decisión del diseño de GIL es una de las cos
 
 Ahora, ya sabemos que GIL previene que espacios en memoria sean liberados cuando aún están siendo utilizados, ok, pero, ¿no hay forma en crear algún otro mecanismo en el recolector de basura para evitar el problema? pues, dejame decirte que Guido van Rossum ,creador de Python dice que GIL esta aquí para quedarse, esto lo explica muy bien en un post al cual te invito le heches un ojo.
 
+https://mail.python.org/pipermail/python-3000/2007-May/007414.html
+
 Pero en esencia, eliminar GIL traería muchos más problemas que ventajas. Programas que ya se encuentran en producción podrían dejar de comportarse como lo hacen ahora para simplemente fallar. Así que, mejor no. (Yo puedo vivir con GIL)
 
 """
@@ -128,4 +130,5 @@ if __name__ == '__main__':
 """
 Si quieres conocer más acerca de GIL, tambíen conocido por la comunidad como: an an “infamous” feature of Python, te comparto una conferencia de Larry Hastings.
 
+https://www.youtube.com/watch?v=KVKufdTphKs&
 """

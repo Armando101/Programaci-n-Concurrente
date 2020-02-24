@@ -4,7 +4,7 @@ Creación de threads
 
 # Utilizamos la api randomuser para hacer peticiones a usuarios aleatorios
 import requests
-import threading 	# Módlo para hacer threads
+import threading 	# Módulo para hacer threads
 
 def get_name():
 	response = requests.get('https://randomuser.me/api/')
